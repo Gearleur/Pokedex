@@ -127,11 +127,21 @@ namespace Pokedex.Models
              */
         }
 
+        /// <summary>
+        /// To know if a player change his pokemon
+        /// </summary>
+        /// <param name="player">The player</param>
+        /// <returns>True if the player change his pokemon</returns>
         public bool IsPokeChange(Trainer player)
         {
             return player.EventDo!.GetType() == typeof(EventChangePokemon);
         }
 
+        /// <summary>
+        /// apply damage to the pokemon
+        /// </summary>
+        /// <param name="player">The player's pokemon who is attacking</param>
+        /// <param name="target">The target's pokemon who is defending</param>
         public void ApplyDamage(Trainer player, Trainer opponent)
         {
             if (player.EventDo!.GetType() == typeof(EventMove))
@@ -144,9 +154,14 @@ namespace Pokedex.Models
             }
         }
 
+        /// <summary>
+        /// Handles the turn of a fight
+        /// </summary>
+        /// <returns>The winning player</returns>
+        /// <param name="faster">The player who's actions are apply in first</param>
+        /// <param name="slower">The player who's actions are apply in second</param>
         public List<Trainer> OrderEvent(Trainer faster,Trainer slower)
         {
-            //int speed = faster.ActivePokemon.Speed;
             if (faster.EventDo!.GetType() == typeof(EventChangePokemon))
             {
                 return new List<Trainer>() { faster, slower };
@@ -155,20 +170,20 @@ namespace Pokedex.Models
             {
                 return new List<Trainer>() { slower, faster };
             }
-            // else if (faster.ActivePokemon.Speed < slower.ActivePokemon.Speed)
-            // {
-            //     return new List<Trainer>() { faster, slower };
-            // }
-            // else if (faster.ActivePokemon.Speed > slower.ActivePokemon.Speed)
-            // {
-            //     return new List<Trainer>() { slower, faster };
-            // }
+            else if ((faster.ActivePokemon?.Speed() ?? 0) < (slower.ActivePokemon?.Speed() ?? 0))
+            {
+                return new List<Trainer>() { slower, faster };
+            }
             else
             {
                 return new List<Trainer>() { faster, slower };
             }
         }
-
+        
+        /// <summary>
+        /// Handles the turn of a fight
+        /// </summary>
+        /// <param name="player">player's turn</param>
         public void TakeChoice(Trainer player)
         {
             int choice;
@@ -258,6 +273,11 @@ namespace Pokedex.Models
 
         #endregion
         #region Showdown
+
+        /// <summary>
+        /// Shows the fight interface
+        /// </summary>
+        /// <param name="player">The player to show</param>
         public void HealthBar(PokeInstance pokemon)
         {
             // TODO
@@ -278,7 +298,9 @@ namespace Pokedex.Models
             Console.Write($"|{healthDisplay}{RemainingHealth}|");
         }
 
-
+        /// <summary>
+        /// Displays the current state of the fight
+        /// </summary>
         public void showfight()
         {
             int legnthA = this._playerA.ActivePokemon!.Nickname.Length + this._playerA.ActivePokemon.Level.ToString().Length;
@@ -314,60 +336,35 @@ namespace Pokedex.Models
             Console.WriteLine($"                                  ------------------------------------");
         }
 
-        public void showInterface1(Trainer player)
+        /// <summary>
+        /// Displays the interface of the fight
+        /// </summary>
+        public void showInterface(Trainer player)
         {
-            int nb = player.Pokemons.Count;
-            int[] lenghtA = new int[nb];
-            string[] spaceA = new string[nb];
-            for (int i = 0; i < nb; i++)
-            {
-                lenghtA[i] = player.ActivePokemon!.Moves[i]!.NameFr.Length;
-                for (int j = 0; j < (30 - lenghtA[i]); j++)
-                {
-                    spaceA[i] += " ";
-                }
-            }
+            Console.WriteLine($"{player.Name}'s turn");
+            Console.WriteLine();
+            Console.WriteLine($"{player.Name}'s Pokemon: {player.ActivePokemon!.Nickname}");
             Console.WriteLine("-------------------------------------------------------------");
-            if (nb == 1)
-            {Console.Write($"|{this._playerA.ActivePokemon!.Moves[0]!.NameEn}{spaceA[0]}|                             ");}
-            if (nb == 2)
+            for (int i = 0; i < 2; i++)
             {
-                for (int i = 0; i < 2; i++)
-                {
-                    Console.Write($"|{this._playerA.ActivePokemon!.Moves[i]!.NameEn}{spaceA[i]}|");
-                }
-                Console.WriteLine("-------------------------------------------------------------");
+                Console.Write($"|{this._playerA.ActivePokemon?.Moves[i]?.NameEn ?? ""} {i+1}{"".PadRight(26 - this._playerA.ActivePokemon?.Moves[i]?.NameEn.Length ?? 0)}|");
             }
-            else if (nb == 3)
+            Console.WriteLine();
+            Console.WriteLine("-------------------------------------------------------------");
+            for (int i = 2; i < 4; i++)
             {
-                for (int i = 0; i < 2; i++)
-                {
-                    Console.Write($"|{this._playerA.ActivePokemon!.Moves[i]!.NameEn}{spaceA[i]}|");
-                }
-                Console.WriteLine("-------------------------------------------------------------");
-                Console.Write($"|{this._playerA.ActivePokemon!.Moves[2]!.NameEn}{spaceA[2]}|                            ");
-                Console.WriteLine("-------------------------------------------------------------");
+                Console.Write($"|{this._playerA.ActivePokemon?.Moves[i]?.NameEn ?? ""} {i+1}{"".PadRight(26 - this._playerA.ActivePokemon?.Moves[i]?.NameEn.Length ?? 0)}|");
             }
-            else if (nb == 4)
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    Console.Write($"|{this._playerA.ActivePokemon!.Moves[i]!.NameEn}{spaceA[i]}|");
-                }
-                Console.WriteLine("-------------------------------------------------------------");
-                for (int i = 2; i < 4; i++)
-                {
-                    Console.Write($"|{this._playerA.ActivePokemon!.Moves[i]!.NameEn}{spaceA[i]}|");
-                }
-                Console.WriteLine("-------------------------------------------------------------");
-            }
-            else
-            {
-                Console.WriteLine("-------------------------------------------------------------");
-            }
+            Console.WriteLine();
+            Console.WriteLine("-------------------------------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine("                                                               Changer de pokemon 5");
         }
 
-        public void showInterface(Trainer player)
+        /// <summary>
+        /// Displays the interface of the fight 2
+        /// </summary>
+        public void showInterface1(Trainer player)
         {
             for (int i = 0; player.ActivePokemon!.Moves[i] is not null; i++)
             {

@@ -156,7 +156,10 @@ namespace Pokedex.Models
             this._hp = this.CalcHp();
         }
 
-        public Int32 Speed()
+        /// <summary>
+        /// Get pokemon's speed
+        /// </summary>
+        public int Speed()
         {
             return (int)(this._pokemon.StatSpeed) ;
         }

@@ -23,7 +23,7 @@ namespace Pokedex
 
             // Create our pokemons
             PokeInstance pikachu = new PokeInstance(Raichu.Instance, "Pika", 25, Gender.Male, 18);
-            PokeInstance charizard = new PokeInstance(Charizard.Instance, "Draco", 85, Gender.Male, 500);
+            PokeInstance charizard = new PokeInstance(Charizard.Instance, "Draco", 85, Gender.Male);
             PokeInstance squirtle = new PokeInstance(Squirtle.Instance, "carapuce", 8, Gender.Female);
 
             // Learn moves

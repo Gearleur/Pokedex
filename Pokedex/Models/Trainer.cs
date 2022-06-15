@@ -138,7 +138,12 @@ namespace Pokedex.Models
         {
             foreach (PokeInstance pokemon in this._pokemons)
             {
-                Console.WriteLine($"{pokemon.Nickname}");
+                Console.WriteLine($"----------------------------------------");
+                Console.WriteLine($"|{pokemon.Pokemon.Id}{"".PadRight(38 - pokemon.Pokemon.Id.ToString().Length)}|");
+                Console.WriteLine($"|{pokemon.Pokemon.NameFr}: {pokemon.Nickname}{"".PadRight(36 - pokemon.Pokemon.NameFr.Length - pokemon.Nickname.Length)}|");
+                Console.WriteLine($"|HP: {pokemon.CalcHp()}{"".PadRight(34-pokemon.CalcHp().ToString().Length)}|");
+                Console.WriteLine($"----------------------------------------");
+                Console.WriteLine();
             }
         }
 
@@ -186,8 +191,6 @@ namespace Pokedex.Models
             this._event = new EventChangePokemon(this, this.Pokemons[choice - 1]);
             this.ActivePokemon = this.Pokemons[choice - 1];
         }
-
-
         #endregion
     }
 }
